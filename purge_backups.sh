@@ -19,8 +19,8 @@ function convertToSeconds {
       echo "$(( $value * 31536000 ))"
       ;;
     *)
-      echo "Invalid retention period: $value$unit"
-      exit 1
+      echo "Invalid retention period: $value$unit" >&2
+      return 1
       ;;
   esac
 }
@@ -98,7 +98,6 @@ while [[ $# -gt 0 ]]; do
       ;;
      --dry-run)
       dryRun=true
-      shift
       ;;
     -h|--help)
       printHelp
@@ -125,6 +124,11 @@ dailyRetentionSeconds=$(convertToSeconds "${dailyRetention%${dailyRetention##*[!
 weeklyRetentionSeconds=$(convertToSeconds "${weeklyRetention%${weeklyRetention##*[!0-9]}}" "${weeklyRetention##*[0-9]}")
 monthlyRetentionSeconds=$(convertToSeconds "${monthlyRetention%${monthlyRetention##*[!0-9]}}" "${monthlyRetention##*[0-9]}")
 yearlyRetentionSeconds=$(convertToSeconds "${yearlyRetention%${yearlyRetention##*[!0-9]}}" "${yearlyRetention##*[0-9]}")
+
+if [[ $? -ne 0 ]]; then
+  echo "Error occurred, terminating script" >&2
+  exit 1
+fi
 
 # Iterate over the backup directories
 for dir in "${backupPath}"/*; do
