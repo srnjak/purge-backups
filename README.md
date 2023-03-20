@@ -1,10 +1,10 @@
 # Backup retention policy script
 
-backup-delete.sh is a Bash script for deleting old backups based on a retention policy.
+purge_backups.sh is a Bash script for deleting old backups based on a retention policy.
 
 ## Usage
 
-    ./backup-delete.sh [-d <days>] [-w <weeks>] [-m <months>] [-y <years>] -p <path>
+    ./purge_backups.sh [-d <days>] [-w <weeks>] [-m <months>] [-y <years>] -p <path>
     
 ### Options
 
@@ -18,17 +18,46 @@ backup-delete.sh is a Bash script for deleting old backups based on a retention 
 | --dry-run                     | Show which backups would be deleted without actually deleting them. |      |
 | -h, --help                    | Show help message. |      |
 
-Note that when specifying the retention period using the -d, -w, -m, or -y options, you must include a unit of time (d for days, w for weeks, m for months, or y for years). If no unit is specified, the script will default to days.
+Note that when specifying the retention period using the -d, -w, -m, or -y options, you must include a unit of time (d for days, w for weeks, m for months, or y for years). 
+If no unit is specified, the script will default to days.
 
 ### Retention Policy
 
-The retention policy is to keep daily backups for a specified number of days, weekly backups for a specified number of weeks, monthly backups for a specified number of months, and yearly backups for a specified number of years. The retention periods are set using the options described above.
+The retention policy is to keep daily backups for a specified number of days, weekly backups for a specified number of weeks, monthly backups for a specified number of months, and yearly backups for a specified number of years. 
+The retention periods are set using the options described above.
+
+### Requirements
+
+Backup directory name format is important for efficient management and organization of backup files. 
+In some cases, backup directories need to be pruned based on their name. 
+Therefore, it is essential to follow a specific naming convention to ensure that the backup files are correctly identified and retained. 
+The following is a backup directory name format that can be used for various backup types:
+
+    <prefix>_<date>_<time>_<suffix>
+
+- prefix: the name of the backed up entity (e.g., database name).
+- date: the date when the backup was taken in the format yyyy-MM-dd.
+- time: the time when the backup was taken in the format hhmmss.
+- suffix: the retention type, either daily, weekly, monthly, or yearly.
+  - Daily backups: suffix is 'daily'.
+  - Weekly backups: suffix is 'weekly'.
+  - Monthly backups: suffix is 'monthly'.
+  - Yearly backups: suffix is 'yearly'.
+
 
 ### Examples
+Retention policy: keep daily backups for 30 days
 
-Clean backups older than the retention period:
+    ./purge_backups.sh -p /backups/mybackup -d 30d
 
-    ./backup-delete.sh -d 7 -w 4 -m 12 -y 2 -p /path/to/backup/directory
+Retention policy: keep monthly backups for 6 months and weekly backups for 4 weeks, and daily backups for 3 days
+
+    ./purge_backups.sh -p /backups/mybackup -m 6M -w 4W -d 3D
+
+Perform a dry run to print the directories that would be deleted without actually deleting them
+
+    ./purge_backups.sh -p /backups/mybackup --dry-run
+
     
 ## License
 
