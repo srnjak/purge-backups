@@ -1,0 +1,26 @@
+name: Release workflow
+
+env:
+  PACKAGE_NAME: purge-backups.deb
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  release-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Prepare
+        run: |
+          bash utils/builder.sh clean
+          bash utils/builder.sh prepare
+      - name: Package
+        run: |
+          bash utils/builder.sh package -n "${{ env.PACKAGE_NAME }}"
+      - name: Deploy
+        run: |
+          bash utils/builder.sh deploy -u "${{ vars.REPOSITORY_USERNAME }}" -p "${{ secrets.REPOSITORY_PASSWORD }}" -r "${{ vars.REPOSITORY_URL }}" -n "${{ env.PACKAGE_NAME }}"
