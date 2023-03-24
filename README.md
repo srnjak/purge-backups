@@ -1,10 +1,10 @@
 # Backup retention policy script
 
-purge_backups.sh is a Bash script for deleting old backups based on a retention policy.
+`purge-backups` is a Bash script for deleting old backups based on a retention policy.
 
 ## Usage
 
-    ./purge_backups.sh [-d <days>] [-w <weeks>] [-m <months>] [-y <years>] -p <path>
+    ./purge-backups [-d <days>] [-w <weeks>] [-m <months>] [-y <years>] -p <path>
     
 ### Options
 
@@ -48,15 +48,15 @@ The following is a backup directory name format that can be used for various bac
 ### Examples
 Retention policy: keep daily backups for 30 days
 
-    ./purge_backups.sh -p /backups/mybackup -d 30d
+    purge-backups -p /backups/mybackup -d 30d
 
 Retention policy: keep monthly backups for 6 months and weekly backups for 4 weeks, and daily backups for 3 days
 
-    ./purge_backups.sh -p /backups/mybackup -m 6M -w 4W -d 3D
+    purge-backups -p /backups/mybackup -m 6M -w 4W -d 3D
 
 Perform a dry run to print the directories that would be deleted without actually deleting them
 
-    ./purge_backups.sh -p /backups/mybackup --dry-run
+    purge-backups -p /backups/mybackup --dry-run
 
     
 ## License
