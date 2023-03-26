@@ -55,6 +55,7 @@ jobs:
           TAG_NAME="v${VERSION//\~/-}"
           git tag "$TAG_NAME"  
           git push origin develop
+          git push origin "$TAG_NAME"
       - name: Upload release artifact
         uses: actions/upload-artifact@v2
         with:
