@@ -12,7 +12,7 @@ defaults:
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   release-job:
