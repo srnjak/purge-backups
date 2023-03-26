@@ -1,5 +1,5 @@
-Package: purge-backups
-Version: 1.0.0
+Package: {{package}}
+Version: {{version}}
 Architecture: all
-Maintainer: Grega Krajnc <grega.dev@srnjak.com>
-Description: A Bash script for deleting old backups based on a retention policy.
+Maintainer: {{maintainer}}
+Description: {{description}}
