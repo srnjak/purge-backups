@@ -1,4 +1,4 @@
-name: Release workflow
+name: Preview workflow
 
 env:
   PACKAGE_NAME: purge-backups.deb
@@ -8,25 +8,29 @@ defaults:
     env:
       GIT_COMMITTER_EMAIL: actions@github.com
       GIT_COMMITTER_NAME: GitHub Actions
+      RELEASE_COMMIT_MESSAGE: "Release of version"
+      MERGE_MASTER_MESSAGE: "Merge branch 'master' into develop"
     shell: bash -eo pipefail {0}
 
 on:
   push:
     branches:
-      - main
+      - develop
 
 jobs:
   release-job:
+    if: >
+      !startsWith(github.event.head_commit.message, ${{ env.RELEASE_COMMIT_MESSAGE }})
+      && github.event.head_commit.message != ${{ env.MERGE_MASTER_MESSAGE }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Set up version
+        id: version_step
         run: |
           VERSION=$(bash utils/version-manager.sh $(pwd) --release)
-          git add .
-          git commit -m "Release of version $VERSION"
-          git tag "v$VERSION"
+          echo "::set-output name=version::$VERSION"
       - name: Prepare
         run: |
           bash utils/builder.sh clean
@@ -38,20 +42,22 @@ jobs:
       - name: Deploy
         run: |
           bash utils/builder.sh deploy \
-            -u "${{ vars.REPOSITORY_USERNAME }}" \
-            -p "${{ secrets.REPOSITORY_PASSWORD }}" \
-            -r "${{ vars.REPOSITORY_URL }}" \
+            -u "${{ vars.REPOSITORY_PREVIEW_USERNAME }}" \
+            -p "${{ secrets.REPOSITORY_PREVIEW_PASSWORD }}" \
+            -r "${{ vars.REPOSITORY_PREVIEW_URL }}" \
             -n "${{ env.PACKAGE_NAME }}"
-      - name: Merge to develop branch and create preview version
+      - name: Commit and tag release changes
         run: |
-          git fetch origin
-          git checkout develop
-          git merge --no-ff master -m "Merge branch 'master' into develop"
+          VERSION=${{ steps.version_step.outputs.version }}
+          git add .
+          git commit -m "Release of version $VERSION"
+          git tag "v$VERSION"
           git push origin develop
       - name: Upload release artifact
         uses: actions/upload-artifact@v2
         with:
-          name: Release
-          path: target/purge-backups.deb
+          name: Preview
+          path: |
+            .
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -85,6 +85,7 @@ case "$command" in
     ;;
   prepare)
     echo "Preparing..."
+    $SCRIPT_DIR/generate_control_file.sh $ROOT_DIR
     $SCRIPT_DIR/deb_structure.sh $ROOT_DIR
     ;;
   package)
