@@ -2,8 +2,8 @@ name: Preview workflow
 
 env:
   PACKAGE_NAME: purge-backups.deb
-  GIT_COMMITTER_EMAIL: actions@github.com
-  GIT_COMMITTER_NAME: GitHub Actions
+  GIT_COMMITTER_EMAIL: bot@srnjak.com
+  GIT_COMMITTER_NAME: Srnjak bot
 
 defaults:
   run:
@@ -56,6 +56,8 @@ jobs:
           git tag "$TAG_NAME"  
           git push origin develop
           git push origin "$TAG_NAME"
+        env:
+          GITHUB_TOKEN: ${{ secrets.BOT_TOKEN }}
       - name: Upload release artifact
         uses: actions/upload-artifact@v2
         with:
