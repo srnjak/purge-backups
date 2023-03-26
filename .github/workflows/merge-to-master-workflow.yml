@@ -1,8 +1,8 @@
 name: Merge develop into master
 
 env:
-  GIT_COMMITTER_EMAIL: actions@github.com
-  GIT_COMMITTER_NAME: GitHub Actions
+  GIT_COMMITTER_EMAIL: bot@srnjak.com
+  GIT_COMMITTER_NAME: Srnjak bot
 
 on:
   workflow_dispatch:
@@ -19,10 +19,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
         with:
-          ref: develop
+          ref: master
 
       - name: Merge develop into master
         run: |
-          git checkout master
           git merge --no-ff --no-edit develop
           git push origin master
+        env:
+          GITHUB_TOKEN: ${{ secrets.BOT_TOKEN }}
