@@ -46,4 +46,4 @@ mkdir -p $rootdir/target/purge-backups/DEBIAN
 mkdir -p $rootdir/target/purge-backups/usr/bin
 
 cp $rootdir/src/bash/purge-backups $rootdir/target/purge-backups/usr/bin
-cp $rootdir/src/debian/control $rootdir/target/purge-backups/DEBIAN
+cp -r $rootdir/target/DEBIAN $rootdir/target/purge-backups
