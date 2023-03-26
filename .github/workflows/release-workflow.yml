@@ -2,12 +2,11 @@ name: Release workflow
 
 env:
   PACKAGE_NAME: purge-backups.deb
+  GIT_COMMITTER_EMAIL: actions@github.com
+  GIT_COMMITTER_NAME: GitHub Actions
 
 defaults:
   run:
-    env:
-      GIT_COMMITTER_EMAIL: actions@github.com
-      GIT_COMMITTER_NAME: GitHub Actions
     shell: bash -eo pipefail {0}
 
 on:
@@ -19,6 +18,9 @@ jobs:
   release-job:
     runs-on: ubuntu-latest
     steps:
+      - name: Set up Git identity
+        run: |
+          git config --global user.email "${{ env.GIT_COMMITTER_EMAIL }}"
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Set up version

@@ -2,14 +2,11 @@ name: Preview workflow
 
 env:
   PACKAGE_NAME: purge-backups.deb
+  GIT_COMMITTER_EMAIL: actions@github.com
+  GIT_COMMITTER_NAME: GitHub Actions
 
 defaults:
   run:
-    env:
-      GIT_COMMITTER_EMAIL: actions@github.com
-      GIT_COMMITTER_NAME: GitHub Actions
-      RELEASE_COMMIT_MESSAGE: "Release of version"
-      MERGE_MASTER_MESSAGE: "Merge branch 'master' into develop"
     shell: bash -eo pipefail {0}
 
 on:
@@ -20,17 +17,21 @@ on:
 jobs:
   release-job:
     if: >
-      !startsWith(github.event.head_commit.message, ${{ env.RELEASE_COMMIT_MESSAGE }})
-      && github.event.head_commit.message != ${{ env.MERGE_MASTER_MESSAGE }}
+      !contains(github.event.head_commit.message, 'Release of version')
+      && github.event.head_commit.message != 'Merge branch ''master'' into develop'
     runs-on: ubuntu-latest
     steps:
+      - name: Set up Git identity
+        run: |
+          git config --global user.email "${{ env.GIT_COMMITTER_EMAIL }}"
+          git config --global user.name "${{ env.GIT_COMMITTER_NAME }}"
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Set up version
         id: version_step
         run: |
-          VERSION=$(bash utils/version-manager.sh $(pwd) --release)
-          echo "::set-output name=version::$VERSION"
+          VERSION=$(bash utils/version-manager.sh $(pwd) --new-preview)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
       - name: Prepare
         run: |
           bash utils/builder.sh clean
@@ -51,7 +52,8 @@ jobs:
           VERSION=${{ steps.version_step.outputs.version }}
           git add .
           git commit -m "Release of version $VERSION"
-          git tag "v$VERSION"
+          TAG_NAME="v${VERSION//\~/-}"
+          git tag "$TAG_NAME"  
           git push origin develop
       - name: Upload release artifact
         uses: actions/upload-artifact@v2
