@@ -19,10 +19,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
         with:
-          ref: develop
+          ref: master
 
       - name: Merge develop into master
         run: |
-          git checkout master
           git merge --no-ff --no-edit develop
           git push origin master
