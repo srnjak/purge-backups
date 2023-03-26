@@ -21,6 +21,7 @@ jobs:
       - name: Set up Git identity
         run: |
           git config --global user.email "${{ env.GIT_COMMITTER_EMAIL }}"
+          git config --global user.name "${{ env.GIT_COMMITTER_NAME }}"
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Set up version
