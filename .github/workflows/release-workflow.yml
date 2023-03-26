@@ -24,6 +24,8 @@ jobs:
           git config --global user.name "${{ env.GIT_COMMITTER_NAME }}"
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Set up version
         run: |
           VERSION=$(bash utils/version-manager.sh $(pwd) --release)

@@ -19,7 +19,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
         with:
-          ref: master
+          fetch-depth: 0
 
       - name: Merge develop into master
         run: |
