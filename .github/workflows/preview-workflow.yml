@@ -1,7 +1,7 @@
 name: Preview workflow
 
 env:
-  PACKAGE_NAME: purge-backups.deb
+  PACKAGE_NAME: purge-backups
   GIT_COMMITTER_EMAIL: bot@srnjak.com
   GIT_COMMITTER_NAME: Srnjak bot
 
@@ -13,6 +13,7 @@ on:
   push:
     branches:
       - develop
+  workflow_dispatch:
 
 jobs:
   release-job:
@@ -40,11 +41,10 @@ jobs:
       - name: Prepare
         run: |
           builder.sh clean
-          builder.sh prepare
+          builder.sh prepare -n "${{ env.PACKAGE_NAME }}"
       - name: Package
         run: |
-          builder.sh package \
-            -n "${{ env.PACKAGE_NAME }}"
+          builder.sh package -n "${{ env.PACKAGE_NAME }}"
       - name: Deploy
         run: |
           builder.sh deploy \
