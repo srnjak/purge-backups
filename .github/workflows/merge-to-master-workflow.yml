@@ -17,9 +17,10 @@ jobs:
           git config --global user.name "${{ env.GIT_COMMITTER_NAME }}"
 
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      - run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
       - name: Merge develop into master
         run: |

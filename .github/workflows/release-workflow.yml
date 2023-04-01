@@ -25,12 +25,13 @@ jobs:
           git config --global user.email "${{ env.GIT_COMMITTER_EMAIL }}"
           git config --global user.name "${{ env.GIT_COMMITTER_NAME }}"
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      - run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
       - name: Set up version
         run: |
-          VERSION=$(version-manager.sh $(pwd) --release)
+          VERSION=$(version-updater.sh $(pwd) --release)
           git add .
           git commit -m "Release of version $VERSION"
           git tag "v$VERSION"
