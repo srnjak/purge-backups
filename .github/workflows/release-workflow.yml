@@ -17,6 +17,8 @@ on:
 jobs:
   release-job:
     runs-on: ubuntu-latest
+    container:
+      image: srnjak/debian-package-builder:latest
     steps:
       - name: Set up Git identity
         run: |
@@ -28,21 +30,20 @@ jobs:
           fetch-depth: 0
       - name: Set up version
         run: |
-          VERSION=$(bash utils/version-manager.sh $(pwd) --release)
+          VERSION=$(version-manager.sh $(pwd) --release)
           git add .
           git commit -m "Release of version $VERSION"
           git tag "v$VERSION"
       - name: Prepare
         run: |
-          bash utils/builder.sh clean
-          bash utils/builder.sh prepare
+          builder.sh clean
+          builder.sh prepare
       - name: Package
         run: |
-          bash utils/builder.sh package \
-            -n "${{ env.PACKAGE_NAME }}"
+          builder.sh package -n "${{ env.PACKAGE_NAME }}"
       - name: Deploy
         run: |
-          bash utils/builder.sh deploy \
+          builder.sh deploy \
             -u "${{ vars.REPOSITORY_USERNAME }}" \
             -p "${{ secrets.REPOSITORY_PASSWORD }}" \
             -r "${{ vars.REPOSITORY_URL }}" \

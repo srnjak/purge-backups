@@ -20,6 +20,8 @@ jobs:
       !contains(github.event.head_commit.message, 'Release of version')
       && github.event.head_commit.message != 'Merge branch ''master'' into develop'
     runs-on: ubuntu-latest
+    container:
+      image: srnjak/debian-package-builder:latest
     steps:
       - name: Set up Git identity
         run: |
@@ -30,19 +32,19 @@ jobs:
       - name: Set up version
         id: version_step
         run: |
-          VERSION=$(bash utils/version-manager.sh $(pwd) --new-preview)
+          VERSION=$(version-manager.sh $(pwd) --new-preview)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
       - name: Prepare
         run: |
-          bash utils/builder.sh clean
-          bash utils/builder.sh prepare
+          builder.sh clean
+          builder.sh prepare
       - name: Package
         run: |
-          bash utils/builder.sh package \
+          builder.sh package \
             -n "${{ env.PACKAGE_NAME }}"
       - name: Deploy
         run: |
-          bash utils/builder.sh deploy \
+          builder.sh deploy \
             -u "${{ vars.REPOSITORY_PREVIEW_USERNAME }}" \
             -p "${{ secrets.REPOSITORY_PREVIEW_PASSWORD }}" \
             -r "${{ vars.REPOSITORY_PREVIEW_URL }}" \
