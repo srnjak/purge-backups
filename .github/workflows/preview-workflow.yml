@@ -20,29 +20,34 @@ jobs:
       !contains(github.event.head_commit.message, 'Release of version')
       && github.event.head_commit.message != 'Merge branch ''master'' into develop'
     runs-on: ubuntu-latest
+    container:
+      image: srnjak/debian-package-builder:latest
+      env:
+        GIT_SSH_VARIANT: ssh
     steps:
       - name: Set up Git identity
         run: |
           git config --global user.email "${{ env.GIT_COMMITTER_EMAIL }}"
           git config --global user.name "${{ env.GIT_COMMITTER_NAME }}"
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+      - run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
       - name: Set up version
         id: version_step
         run: |
-          VERSION=$(bash utils/version-manager.sh $(pwd) --new-preview)
+          VERSION=$(version-updater.sh $(pwd) --new-preview)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
       - name: Prepare
         run: |
-          bash utils/builder.sh clean
-          bash utils/builder.sh prepare
+          builder.sh clean
+          builder.sh prepare
       - name: Package
         run: |
-          bash utils/builder.sh package \
+          builder.sh package \
             -n "${{ env.PACKAGE_NAME }}"
       - name: Deploy
         run: |
-          bash utils/builder.sh deploy \
+          builder.sh deploy \
             -u "${{ vars.REPOSITORY_PREVIEW_USERNAME }}" \
             -p "${{ secrets.REPOSITORY_PREVIEW_PASSWORD }}" \
             -r "${{ vars.REPOSITORY_PREVIEW_URL }}" \
@@ -55,7 +60,9 @@ jobs:
           TAG_NAME="v${VERSION//\~/-}"
           git tag "$TAG_NAME"  
           git push origin develop
-          git push origin "$TAG_NAME"
+          if ! git push origin --force "$TAG_NAME"; then
+            echo "Tag $TAG_NAME already exists."
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.BOT_TOKEN }}
       - name: Upload release artifact
