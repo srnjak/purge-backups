@@ -24,7 +24,7 @@ jobs:
 
       - name: Merge develop into master
         run: |
-          git merge --no-ff --no-edit develop
+          git merge --no-ff --no-edit origin/develop
           git push origin master
         env:
           GITHUB_TOKEN: ${{ secrets.BOT_TOKEN }}
