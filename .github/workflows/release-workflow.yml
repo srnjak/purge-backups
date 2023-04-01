@@ -1,7 +1,7 @@
 name: Release workflow
 
 env:
-  PACKAGE_NAME: purge-backups.deb
+  PACKAGE_NAME: purge-backups
   GIT_COMMITTER_EMAIL: bot@srnjak.com
   GIT_COMMITTER_NAME: Srnjak bot
 
@@ -58,7 +58,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.BOT_TOKEN }}
       - name: Upload release artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: Release
           path: target/purge-backups.deb
