@@ -39,7 +39,7 @@ jobs:
       - name: Prepare
         run: |
           builder.sh clean
-          builder.sh prepare
+          builder.sh prepare -n "${{ env.PACKAGE_NAME }}"
       - name: Package
         run: |
           builder.sh package -n "${{ env.PACKAGE_NAME }}"
