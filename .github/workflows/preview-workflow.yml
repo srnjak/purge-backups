@@ -14,9 +14,13 @@ on:
     branches:
       - develop
   workflow_dispatch:
+  workflow_run:
+    workflows: [ "Merge master into develop" ]
+    types:
+      - completed
 
 jobs:
-  release-job:
+  preview-job:
     if: >
       !contains(github.event.head_commit.message, 'Release of version')
       && github.event.head_commit.message != 'Merge branch ''master'' into develop'
@@ -32,6 +36,8 @@ jobs:
           git config --global user.name "${{ env.GIT_COMMITTER_NAME }}"
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          ref: develop
       - run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
       - name: Set up version
         id: version_step
@@ -69,7 +75,6 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: Preview
-          path: |
-            .
+          path: target/${{ env.PACKAGE_NAME }}.deb
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.BOT_TOKEN }}

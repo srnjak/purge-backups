@@ -1,4 +1,4 @@
-name: Merge develop into master
+name: Merge master into develop
 
 env:
   GIT_COMMITTER_EMAIL: bot@srnjak.com
@@ -6,6 +6,10 @@ env:
 
 on:
   workflow_dispatch:
+  workflow_run:
+    workflows: [ "Release workflow" ]
+    types:
+      - completed
 
 jobs:
   merge:
@@ -19,13 +23,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          ref: master
+          ref: develop
           fetch-depth: 0
       - run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
-      - name: Merge develop into master
+      - name: Merge master into develop
         run: |
-          git merge --no-ff --no-edit origin/develop
-          git push origin master
+          git merge --no-ff --no-edit origin/master
+          git push origin develop
         env:
           GITHUB_TOKEN: ${{ secrets.BOT_TOKEN }}
