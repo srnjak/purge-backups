@@ -62,6 +62,6 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: Release
-          path: target/purge-backups.deb
+          path: target/${{ env.PACKAGE_NAME }}.deb
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
