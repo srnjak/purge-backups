@@ -69,7 +69,6 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: Preview
-          path: |
-            .
+          path: target/${{ env.PACKAGE_NAME }}.deb
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
