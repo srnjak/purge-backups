@@ -14,6 +14,10 @@ on:
     branches:
       - master
   workflow_dispatch:
+  workflow_run:
+    workflows: [ "Merge develop into master" ]
+    types:
+      - completed
 
 jobs:
   release-job:
@@ -36,6 +40,7 @@ jobs:
           git add .
           git commit -m "Release of version $VERSION"
           git tag "v$VERSION"
+          git push origin master --tags
       - name: Prepare
         run: |
           builder.sh clean
@@ -50,18 +55,10 @@ jobs:
             -p "${{ secrets.REPOSITORY_PASSWORD }}" \
             -r "${{ vars.REPOSITORY_URL }}" \
             -n "${{ env.PACKAGE_NAME }}"
-      - name: Merge to develop branch and create preview version
-        run: |
-          git fetch origin
-          git checkout develop
-          git merge --no-ff master -m "Merge branch 'master' into develop"
-          git push origin develop --tags
-        env:
-          GITHUB_TOKEN: ${{ secrets.BOT_TOKEN }}
       - name: Upload release artifact
         uses: actions/upload-artifact@v3
         with:
           name: Release
           path: target/${{ env.PACKAGE_NAME }}.deb
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.BOT_TOKEN }}
