@@ -22,6 +22,10 @@ on:
 jobs:
   release-job:
     runs-on: ubuntu-latest
+    if: >
+      github.event_name == 'push' && github.ref == 'refs/heads/master'
+          || github.event.workflow_run.conclusion == 'success'
+          || github.event.workflow_dispatch
     container:
       image: srnjak/debian-package-builder:latest
     steps:
@@ -33,10 +37,12 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+          ref: master
       - run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
       - name: Set up version
         run: |
           VERSION=$(version-updater.sh $(pwd) --release)
+          echo "version=$VERSION"
           git add .
           git commit -m "Release of version $VERSION"
           git tag "v$VERSION"
@@ -47,7 +53,7 @@ jobs:
           builder.sh prepare -n "${{ env.PACKAGE_NAME }}"
       - name: Package
         run: |
-          builder.sh package -n "${{ env.PACKAGE_NAME }}"
+          builder.sh package -n "${{ env.PACKAGE_NAME }}" -o "${{ env.PACKAGE_NAME }}.deb"
       - name: Deploy
         run: |
           builder.sh deploy \

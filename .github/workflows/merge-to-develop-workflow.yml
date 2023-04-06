@@ -14,6 +14,9 @@ on:
 jobs:
   merge:
     runs-on: ubuntu-latest
+    if: >
+      github.event.workflow_run.conclusion == 'success'
+          || github.event.workflow_dispatch
     steps:
       - name: Set up Git identity
         run: |

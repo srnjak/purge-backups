@@ -24,6 +24,11 @@ jobs:
     if: >
       !contains(github.event.head_commit.message, 'Release of version')
       && github.event.head_commit.message != 'Merge branch ''master'' into develop'
+      && (
+        github.event_name == 'push' && github.ref == 'refs/heads/develop'
+            || github.event.workflow_run.conclusion == 'success'
+            || github.event.workflow_dispatch
+      )
     runs-on: ubuntu-latest
     container:
       image: srnjak/debian-package-builder:latest
@@ -44,13 +49,14 @@ jobs:
         run: |
           VERSION=$(version-updater.sh $(pwd) --new-preview)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "version=$VERSION"
       - name: Prepare
         run: |
           builder.sh clean
           builder.sh prepare -n "${{ env.PACKAGE_NAME }}"
       - name: Package
         run: |
-          builder.sh package -n "${{ env.PACKAGE_NAME }}"
+          builder.sh package -n "${{ env.PACKAGE_NAME }}" -o "${{ env.PACKAGE_NAME }}.deb"
       - name: Deploy
         run: |
           builder.sh deploy \
