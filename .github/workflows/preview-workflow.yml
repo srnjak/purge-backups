@@ -44,13 +44,14 @@ jobs:
         run: |
           VERSION=$(version-updater.sh $(pwd) --new-preview)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "version=$VERSION"
       - name: Prepare
         run: |
           builder.sh clean
           builder.sh prepare -n "${{ env.PACKAGE_NAME }}"
       - name: Package
         run: |
-          builder.sh package -n "${{ env.PACKAGE_NAME }}"
+          builder.sh package -n "${{ env.PACKAGE_NAME }}" -o "${{ env.PACKAGE_NAME }}.deb"
       - name: Deploy
         run: |
           builder.sh deploy \
