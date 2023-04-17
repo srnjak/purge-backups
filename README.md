@@ -4,19 +4,20 @@
 
 ## Usage
 
-    ./purge-backups [-d <days>] [-w <weeks>] [-m <months>] [-y <years>] -p <path>
+    ./purge-backups [-d <days>] [-w <weeks>] [-m <months>] [-y <years>] -p <path> -x <prefix>
     
 ### Options
 
-| Option                        | Description | Default Value |
-|-------------------------------| ----------- |------|
-| -d, --daily &lt;DAILY&gt;     | Retention period for daily backups in days. | 7d   |
-| -w, --weekly &lt;WEEKLY&gt;   | Retention period for weekly backups in weeks. | 4w   |
-| -m, --monthly &lt;MONTHLY&gt; | Retention period for monthly backups in months. | 12m  |
-| -y, --yearly &lt;YEARLY&gt;   | Retention period for yearly backups in years. | 2y   |
-| -p, --path &lt;PATH&gt;       | The path to the directory containing the backup directories. |      |
-| --dry-run                     | Show which backups would be deleted without actually deleting them. |      |
-| -h, --help                    | Show help message. |      |
+| Option                                  | Description                                                         | Default Value |
+|-----------------------------------------|---------------------------------------------------------------------|---------------|
+| -d, --daily-retention &lt;DAILY&gt;     | Retention period for daily backups in days.                         | 7d            |
+| -w, --weekly-retention &lt;WEEKLY&gt;   | Retention period for weekly backups in weeks.                       | 4w            |
+| -m, --monthly-retention &lt;MONTHLY&gt; | Retention period for monthly backups in months.                     | 12m           |
+| -y, --yearly-retention &lt;YEARLY&gt;   | Retention period for yearly backups in years.                       | 2y            |
+| -p, --backup-path &lt;PATH&gt;          | The path to the directory containing the backup directories.        |               |
+| -x, --backup-prefix &lt;PATH&gt;        | Prefix of the backed up entity (e.g., my_backup).                   |               |
+| --dry-run                               | Show which backups would be deleted without actually deleting them. |               |
+| -h, --help                              | Show help message.                                                  |               |
 
 Note that when specifying the retention period using the -d, -w, -m, or -y options, you must include a unit of time (d for days, w for weeks, m for months, or y for years). 
 If no unit is specified, the script will default to days.
@@ -48,15 +49,15 @@ The following is a backup directory name format that can be used for various bac
 ### Examples
 Retention policy: keep daily backups for 30 days
 
-    purge-backups -p /backups/mybackup -d 30d
+    purge-backups -p /backups/mybackup -x my_backup -d 30d
 
 Retention policy: keep monthly backups for 6 months and weekly backups for 4 weeks, and daily backups for 3 days
 
-    purge-backups -p /backups/mybackup -m 6M -w 4W -d 3D
+    purge-backups -p /backups/mybackup -x my_backup -m 6M -w 4W -d 3D
 
 Perform a dry run to print the directories that would be deleted without actually deleting them
 
-    purge-backups -p /backups/mybackup --dry-run
+    purge-backups -p /backups/mybackup -x my_backup --dry-run
 
     
 ## License
