@@ -7,16 +7,16 @@ function convertToSeconds {
 
   case "$unit" in
     d|D)
-      echo "$(( $value * 86400 ))"
+      echo "$(( ($value + 1) * 86400 ))"
       ;;
     w|W)
-      echo "$(( $value * 604800 ))"
+      echo "$(( ($value + 1) * 604800 ))"
       ;;
     m|M)
-      echo "$(( $value * 2592000 ))"
+      echo "$(( ($value + 1) * 2592000 ))"
       ;;
     y|Y)
-      echo "$(( $value * 31536000 ))"
+      echo "$(( ($value + 1) * 31536000 ))"
       ;;
     *)
       echo "Invalid retention period: $value$unit" >&2
