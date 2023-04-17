@@ -4,18 +4,19 @@
 
 ## Usage
 
-    ./purge-backups [-d <days>] [-w <weeks>] [-m <months>] [-y <years>] -p <path> -x <prefix>
+    purge-backups -p <path> -x <prefix> [-d <days>] [-w <weeks>] [-m <months>] [-y <years>] [--dry-run]
+    purge-backups -h
     
 ### Options
 
 | Option                                  | Description                                                         | Default Value |
 |-----------------------------------------|---------------------------------------------------------------------|---------------|
+| -p, --backup-path &lt;PATH&gt;          | The path to the directory containing the backup directories.        |               |
+| -x, --backup-prefix &lt;PATH&gt;        | Prefix of the backed up entity (e.g., my_backup).                   |               |
 | -d, --daily-retention &lt;DAILY&gt;     | Retention period for daily backups in days.                         | 7d            |
 | -w, --weekly-retention &lt;WEEKLY&gt;   | Retention period for weekly backups in weeks.                       | 4w            |
 | -m, --monthly-retention &lt;MONTHLY&gt; | Retention period for monthly backups in months.                     | 12m           |
 | -y, --yearly-retention &lt;YEARLY&gt;   | Retention period for yearly backups in years.                       | 2y            |
-| -p, --backup-path &lt;PATH&gt;          | The path to the directory containing the backup directories.        |               |
-| -x, --backup-prefix &lt;PATH&gt;        | Prefix of the backed up entity (e.g., my_backup).                   |               |
 | --dry-run                               | Show which backups would be deleted without actually deleting them. |               |
 | -h, --help                              | Show help message.                                                  |               |
 

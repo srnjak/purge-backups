@@ -146,7 +146,8 @@ fi
 for dir in "${backupPath}"/*; do
   if [[ -d "${dir}" ]]; then
     # Get the backup date from the directory name
-    backupDate=$(echo "${dir#$backupPrefix'_'}" | cut -d'_' -f1)
+    dir_leaf="$(basename "$dir")"
+    backupDate=$(echo "${dir_leaf#$backupPrefix'_'}" | cut -d'_' -f1)
 
     # Convert the backup date to Unix timestamp
     backupTimestamp=$(date -d "${backupDate}" +%s)
