@@ -1,0 +1,20 @@
+#!/bin/sh
+set -e
+
+config_dir="/etc/purge-backups"
+
+if [ "$1" = "install" ]; then
+
+  # Create /etc/purge-backups directory if it doesn't already exist
+  if [ ! -d "$config_dir" ]; then
+    mkdir -p $config_dir
+    chown root:root $config_dir
+    chmod 755 $config_dir
+  fi
+fi
+
+# Add the cronjob to the current user's crontab
+(crontab -l ; echo "0 0 * * * /usr/share/purge-backups/purge-backups-scheduler") | crontab -
+
+# Continue with package installation
+exit 0
