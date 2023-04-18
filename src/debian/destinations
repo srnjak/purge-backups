@@ -1,1 +1,9 @@
 bash/purge-backups:usr/bin
+bash/purge-backups-scheduler:usr/share/purge-backups
+
+# Configuration examples
+doc/examples/*:usr/share/doc/purge-backups/examples
+
+# Debian specific
+debian/preinst:DEBIAN
+debian/postrm:DEBIAN
