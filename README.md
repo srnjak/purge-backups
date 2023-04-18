@@ -61,6 +61,13 @@ Perform a dry run to print the directories that would be deleted without actuall
     purge-backups -p /backups/mybackup -x my_backup --dry-run
 
     
+## The scheduler script
+
+The `purge-backups-scheduler` script is designed to automate the process of purging old backups based on a set of retention periods. 
+It reads configuration files from a specified directory, extracts the backup path, backup prefix, and retention periods from each file, and then calls the `purge-backups` command with the extracted parameters.
+
+More information on how to use the `purge-backups-scheduler` script can be found [here](doc/purge-backups-scheduler.md).
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

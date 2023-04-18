@@ -1,0 +1,17 @@
+#!/bin/sh
+set -e
+
+config_dir="/etc/purge-backups"
+
+if [ "$1" = "remove" ]; then
+  # Remove /etc/purge-backups directory if it is empty
+  if [ -d "$config_dir" ] && [ -z "$(ls -A $config_dir)" ]; then
+    rmdir $config_dir
+  fi
+fi
+
+# Remove the cronjob from the current user's crontab
+(crontab -l | grep -v "/usr/share/purge-backups/purge-backups-scheduler" ) | crontab -
+
+# Continue with package removal
+exit 0
