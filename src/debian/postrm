@@ -6,7 +6,7 @@ echo "Postrm argument: $1"
 config_dir="/etc/purge-backups"
 
 case "$1" in
-    remove|upgrade|deconfigure)
+    remove|deconfigure)
         # Remove /etc/purge-backups directory if it is empty
         if [ -d "$config_dir" ] && [ -z "$(ls -A $config_dir)" ]; then
           rmdir $config_dir
