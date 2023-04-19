@@ -55,23 +55,21 @@ done
 
 # Loop through all .cfg files in the config directory
 for file in "$CONFIG_DIR"/*.cfg; do
-  if [ -x "$file" ]; then
-    # Source the file to set the variables
-    # shellcheck disable=SC1090
-    source "$file"
+  # Source the file to set the variables
+  # shellcheck disable=SC1090
+  source "$file"
 
-    # Set default values for retention periods if they are not set in the .cfg file
-    DAILY=${DAILY:-$DEFAULT_DAILY}
-    WEEKLY=${WEEKLY:-$DEFAULT_WEEKLY}
-    MONTHLY=${MONTHLY:-$DEFAULT_MONTHLY}
-    YEARLY=${YEARLY:-$DEFAULT_YEARLY}
+  # Set default values for retention periods if they are not set in the .cfg file
+  DAILY=${DAILY:-$DEFAULT_DAILY}
+  WEEKLY=${WEEKLY:-$DEFAULT_WEEKLY}
+  MONTHLY=${MONTHLY:-$DEFAULT_MONTHLY}
+  YEARLY=${YEARLY:-$DEFAULT_YEARLY}
 
-    # Perform a dry run if specified
-    if [ "$DRY_RUN" ]; then
-      echo "purge-backups -p \"$BACKUP_PATH\" -x \"$BACKUP_PREFIX\" -d \"$DAILY\" -w \"$WEEKLY\" -m \"$MONTHLY\" -y \"$YEARLY\""
-    else
-      # Call the purge-backups command with the extracted parameters
-      purge-backups -p "$BACKUP_PATH" -x "$BACKUP_PREFIX" -d "$DAILY" -w "$WEEKLY" -m "$MONTHLY" -y "$YEARLY"
-    fi
+  # Perform a dry run if specified
+  if [ "$DRY_RUN" ]; then
+    echo "purge-backups -p \"$BACKUP_PATH\" -x \"$BACKUP_PREFIX\" -d \"$DAILY\" -w \"$WEEKLY\" -m \"$MONTHLY\" -y \"$YEARLY\""
+  else
+    # Call the purge-backups command with the extracted parameters
+    purge-backups -p "$BACKUP_PATH" -x "$BACKUP_PREFIX" -d "$DAILY" -w "$WEEKLY" -m "$MONTHLY" -y "$YEARLY"
   fi
 done
