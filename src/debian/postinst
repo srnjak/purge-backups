@@ -1,0 +1,16 @@
+#!/bin/bash
+
+set -e
+
+case "$1" in
+    install|upgrade)
+        # Add the cronjob to the current user's crontab
+        (crontab -l ; echo "0 0 * * * /usr/share/purge-backups/purge-backups-scheduler") | crontab -
+        ;;
+    *)
+        # Do nothing on other actions
+        exit 0
+        ;;
+esac
+
+exit 0
