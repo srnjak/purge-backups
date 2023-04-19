@@ -1,6 +1,8 @@
 #!/bin/sh
 set -e
 
+echo "Postrm argument: $1"
+
 config_dir="/etc/purge-backups"
 
 case "$1" in
