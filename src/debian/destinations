@@ -6,4 +6,5 @@ doc/examples/*:usr/share/doc/purge-backups/examples
 
 # Debian specific
 debian/preinst:DEBIAN
+debian/postinst:DEBIAN
 debian/postrm:DEBIAN
