@@ -7,16 +7,16 @@ function convertToSeconds {
 
   case "$unit" in
     d|D)
-      echo "$(( ($value + 1) * 86400 ))"
+      echo "$(( $value * 86400 ))"
       ;;
     w|W)
-      echo "$(( ($value + 1) * 604800 ))"
+      echo "$(( $value * 604800 ))"
       ;;
     m|M)
-      echo "$(( ($value + 1) * 2592000 ))"
+      echo "$(( $value * 2592000 ))"
       ;;
     y|Y)
-      echo "$(( ($value + 1) * 31536000 ))"
+      echo "$(( $value * 31536000 ))"
       ;;
     *)
       echo "Invalid retention period: $value$unit" >&2
@@ -144,9 +144,10 @@ fi
 
 # Iterate over the backup directories
 for dir in "${backupPath}"/*; do
-  if [[ -d "${dir}" ]]; then
+  dir_leaf="$(basename "$dir")"
+
+  if [[ -d "${dir}" && "${dir_leaf}" == "${backupPrefix}"_* ]]; then
     # Get the backup date from the directory name
-    dir_leaf="$(basename "$dir")"
     backupDate=$(echo "${dir_leaf#$backupPrefix'_'}" | cut -d'_' -f1)
 
     # Convert the backup date to Unix timestamp
