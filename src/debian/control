@@ -2,4 +2,5 @@ Package: {{package}}
 Version: {{version}}
 Architecture: all
 Maintainer: {{maintainer}}
+Depends: cron
 Description: {{description}}
