@@ -2,8 +2,6 @@
 
 set -e
 
-echo "Postinst argument: $1"
-
 case "$1" in
     configure)
         # Add the cronjob to the current user's crontab
