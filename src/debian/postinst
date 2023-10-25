@@ -6,7 +6,7 @@ case "$1" in
     configure)
         # Add the cronjob to the current user's crontab
 
-        (crontab -l ; echo "0 0 * * * /usr/share/purge-backups/purge-backups-scheduler") | crontab - | at now + 1 minute
+        sleep 5 && (crontab -l ; echo "0 0 * * * /usr/share/purge-backups/purge-backups-scheduler") | crontab - &
         ;;
     *)
         # Do nothing on other actions
