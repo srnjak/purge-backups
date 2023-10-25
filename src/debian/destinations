@@ -8,4 +8,3 @@ doc/examples/*:usr/share/doc/purge-backups/examples
 debian/preinst:DEBIAN
 debian/postinst:DEBIAN
 debian/postrm:DEBIAN
-debian/rules:DEBIAN
