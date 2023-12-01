@@ -8,6 +8,12 @@ case "$1" in
         if ! crontab -l | grep -q "/usr/share/purge-backups/purge-backups-scheduler"; then
             # Add the cronjob to the current user's crontab
             (crontab -l 2>/dev/null || true; echo "0 0 * * * /usr/share/purge-backups/purge-backups-scheduler # Part of purge-backups package. DO NOT CHANGE!") | crontab -
+
+            # Enable the cron service
+            update-rc.d cron enable || true
+
+            # Restart the cron service (optional)
+            service cron restart || true
         else
             echo "Cronjob already exists. Skipping addition."
         fi
